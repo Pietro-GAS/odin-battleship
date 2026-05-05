@@ -1,0 +1,34 @@
+{
+  "name": "odin-battleship",
+  "version": "1.0.0",
+  "description": "The goal of this project is to implement the clssic game, \"Battleship\".",
+  "homepage": "https://github.com/Pietro-GAS/odin-battleship#readme",
+  "bugs": {
+    "url": "https://github.com/Pietro-GAS/odin-battleship/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pietro-GAS/odin-battleship.git"
+  },
+  "license": "ISC",
+  "author": "pietrog",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint .",
+    "format-check": "prettier . --check",
+    "format": "prettier . --write"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.29.3",
+    "@eslint/css": "^1.2.0",
+    "@eslint/js": "^10.0.1",
+    "@eslint/json": "^1.2.0",
+    "@eslint/markdown": "^8.0.1",
+    "eslint": "^10.3.0",
+    "globals": "^17.6.0",
+    "jest": "^30.3.0",
+    "prettier": "^3.8.3"
+  }
+}
