@@ -1,15 +1,19 @@
 :root {
   --bg: #222127;
+  --bg-alt: #D9D8DE;
   --menu: #4D4B58;
-  --border: #D9D8DE;
+  --border: #F2F1F3;
   --button: #79758A;
   --hover: #918E9F;
+  --text: #F2F1F3;
+  --text-alt: #0C0C0E;
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  color: var(--text);
 }
 
 body {
@@ -45,8 +49,25 @@ body {
     background-color: var(--hover);
 }
 
+#size-form {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  gap: 30px;
+}
+
+#size-input {
+  width: 30px;
+  color: var(--text-alt);
+  text-align: center;
+  background-color: var(--bg-alt);
+}
+
 #settings-container {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
+  width: 100%;  
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
 }
