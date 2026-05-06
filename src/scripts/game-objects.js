@@ -1,6 +1,7 @@
 export class Ship {
     #hits;
     #length;
+    #id;
 
     constructor(length) {
         this.#length = length;
@@ -21,6 +22,14 @@ export class Ship {
         return this.#length;
     }
 
+    getId() {
+        return this.#id;
+    }
+
+    setId(string) {
+        this.#id = string;
+    }
+
     isSunk() {
         return this.#hits === this.#length;
     }
@@ -32,6 +41,8 @@ export class Gameboard {
     constructor(size) {
         this.#size = size;
         this.board = Array.from( { length: size }, () => Array(size).fill(null));
+        this.shots = { hits: [], misses: [] };
+        this.ships = [];
     }
 
     placeShip(x, y, length, orientation="x") {
@@ -39,6 +50,9 @@ export class Gameboard {
         if (!this.#validateShip(x, y, ship, orientation)) {
             throw new Error("Invalid ship placement");
         }
+
+        ship.setId([x, y].toString());
+        this.ships.push(ship);
 
         if (orientation === "x") {
             for (let i = 0; i < ship.getLength(); i++) {
@@ -51,17 +65,37 @@ export class Gameboard {
         }
     }
 
+    receiveAttack(x, y) {
+        const attackString = [x, y].toString();
+        if (this.#isPreviousAttack(attackString)) {
+            throw new Error("Repeated attack");
+        }
+
+        if (this.board[y][x] === null) {
+            this.shots.misses.push(attackString);
+        } else {
+            this.shots.hits.push(attackString);
+            const shipId = this.board[y][x].getId();
+            const ship = this.ships.find(element => element.getId() === shipId);
+            ship.hit();
+        }
+    }
+
+    allShipsSunk() {
+        return this.ships.length > 0 && this.ships.every(ship => ship.isSunk());
+    }
+
     #validateShip(x, y, ship, orientation) {
         const positions = [];
         if (orientation === "x") {
-            if (x + ship.getLength() >= this.#size) {
+            if (x + ship.getLength() > this.#size) {
                 return false;
             }
             for (let i = 0; i < ship.getLength(); i++) {
                 positions.push(this.board[y][x + i] === null);
             } 
         } else if (orientation === "y") {
-            if (y + ship.getLength() >= this.#size) {
+            if (y + ship.getLength() > this.#size) {
                 return false;
             }
             for (let i = 0; i < ship.getLength(); i++) {
@@ -70,5 +104,16 @@ export class Gameboard {
         }
 
         return positions.every((element) => element === true);
+    }
+
+    #isPreviousAttack(coordinateStr) {
+        return this.shots.hits.includes(coordinateStr) || this.shots.misses.includes(coordinateStr);
+    }
+}
+
+export class Player {
+    constructor (size, isHuman) {
+        this.type = isHuman ? "human" : "cpu";
+        this.gameboard = new Gameboard(size);
     }
 }
