@@ -1,0 +1,52 @@
+:root {
+  --bg: #222127;
+  --menu: #4D4B58;
+  --border: #D9D8DE;
+  --button: #79758A;
+  --hover: #918E9F;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--bg);
+}
+
+.menu {
+    padding: 10px;
+    background-color: var(--menu);
+    border: solid 1px var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+}
+
+.button {
+    padding: 2px;
+    background-color: var(--button);
+    border: solid 1px var(--border);
+    height: 30px;
+    width: 90px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.button:hover {
+    background-color: var(--hover);
+}
+
+#settings-container {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
