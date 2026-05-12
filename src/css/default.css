@@ -50,6 +50,7 @@ body {
 }
 
 .button {
+    transition-duration: 0.2s ease-out;
     padding: 2px;
     background-color: var(--button);
     border: solid 1px var(--border);
@@ -60,8 +61,12 @@ body {
     align-items: center;
 }
 
+.button.clicked {
+  background-color: var(--bg);
+}
+
 .button:hover {
-    background-color: var(--hover);
+    filter: brightness(90%);
 }
 
 #size-form {

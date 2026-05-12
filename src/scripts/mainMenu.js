@@ -34,11 +34,14 @@ export const loadMainMenu = () => {
 
     const btnOneP = document.createElement("div");
     btnOneP.setAttribute("class", "button");
+    btnOneP.classList.add("clicked");
     btnOneP.setAttribute("id", "button-one-p");
     btnOneP.innerHTML = "One Player";
     btnOneP.addEventListener("click", (e) => {
         e.preventDefault();
         localStorage.setItem("playerNumber", "1");
+        btnOneP.classList.add("clicked");
+        btnTwoP.classList.remove("clicked");
     })
 
     const btnTwoP = document.createElement("div");
@@ -48,6 +51,8 @@ export const loadMainMenu = () => {
     btnTwoP.addEventListener("click", (e) => {
         e.preventDefault();
         localStorage.setItem("playerNumber", "2");
+        btnTwoP.classList.add("clicked");
+        btnOneP.classList.remove("clicked");
     })
     
     const btnSetup = document.createElement("div");
