@@ -37,12 +37,13 @@ export class Ship {
 
 export class Gameboard {
     #size;
+    #ships;
 
     constructor(size) {
         this.#size = size;
         this.board = Array.from( { length: size }, () => Array(size).fill(null));
         this.shots = { hits: [], misses: [] };
-        this.ships = [];
+        this.#ships = [];
     }
 
     placeShip(x, y, length, orientation="x") {
@@ -52,7 +53,7 @@ export class Gameboard {
         }
 
         ship.setId([x, y].toString());
-        this.ships.push(ship);
+        this.#ships.push(ship);
 
         if (orientation === "x") {
             for (let i = 0; i < ship.getLength(); i++) {
@@ -68,7 +69,7 @@ export class Gameboard {
     receiveAttack(x, y) {
         const attackString = [x, y].toString();
         if (this.#isPreviousAttack(attackString)) {
-            throw new Error("Repeated attack");
+            alert("Repeated attack! Please select a different cell.");
         }
 
         if (this.board[y][x] === null) {
@@ -76,13 +77,17 @@ export class Gameboard {
         } else {
             this.shots.hits.push(attackString);
             const shipId = this.board[y][x].getId();
-            const ship = this.ships.find(element => element.getId() === shipId);
+            const ship = this.#ships.find(element => element.getId() === shipId);
             ship.hit();
         }
     }
 
     allShipsSunk() {
-        return this.ships.length > 0 && this.ships.every(ship => ship.isSunk());
+        return this.#ships.length > 0 && this.#ships.every(ship => ship.isSunk());
+    }
+
+    getShips() {
+        return this.#ships;
     }
 
     #validateShip(x, y, ship, orientation) {
@@ -112,8 +117,9 @@ export class Gameboard {
 }
 
 export class Player {
-    constructor (size, isHuman) {
-        this.type = isHuman ? "human" : "cpu";
+    constructor (size, isHuman, name) {
+        this.isHuman = isHuman;
         this.gameboard = new Gameboard(size);
+        this.name = name;
     }
 }

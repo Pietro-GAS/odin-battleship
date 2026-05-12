@@ -1,12 +1,17 @@
+import { initializeGame } from "./game-logic.js";
+
 export const loadMainMenu = () => {
     const body = document.querySelector("body");
     body.replaceChildren();
+
+    const header = document.createElement("div");
+    header.setAttribute("class", "header");
 
     const mainMenu = document.createElement("div");
     mainMenu.setAttribute("class", "menu");
     mainMenu.setAttribute("id", "settings-menu");
 
-    const title = document.crea");
+    const title = document.createElement("h2");
     title.setAttribute("class", "heading");
     title.innerHTML = "BATTLESHIP!";
     
@@ -31,17 +36,35 @@ export const loadMainMenu = () => {
     btnOneP.setAttribute("class", "button");
     btnOneP.setAttribute("id", "button-one-p");
     btnOneP.innerHTML = "One Player";
+    btnOneP.addEventListener("click", (e) => {
+        e.preventDefault();
+        localStorage.setItem("playerNumber", "1");
+    })
 
     const btnTwoP = document.createElement("div");
     btnTwoP.setAttribute("class", "button");
     btnTwoP.setAttribute("id", "button-two-p");
     btnTwoP.innerHTML = "Two Players";
+    btnTwoP.addEventListener("click", (e) => {
+        e.preventDefault();
+        localStorage.setItem("playerNumber", "2");
+    })
     
     const btnSetup = document.createElement("div");
     btnSetup.setAttribute("class", "button");
     btnSetup.setAttribute("id", "button-setup");
     btnSetup.innerHTML = "Confirm";
+    btnSetup.addEventListener("click", (e) => {
+        e.preventDefault();
+        const boardSize = Number(sizeInput.value);
+        const playerNumber = Number(localStorage.getItem("playerNumber"));
+        initializeGame(boardSize, playerNumber); // playerNumber to be determined
+    });
+
+    const footer = document.createElement("div");
+    footer.setAttribute("class", "footer");
     
+    body.appendChild(header);
     body.appendChild(mainMenu);
     mainMenu.appendChild(title);
     mainMenu.appendChild(sizeForm);
@@ -51,4 +74,5 @@ export const loadMainMenu = () => {
     container.appendChild(btnOneP);
     container.appendChild(btnTwoP);
     mainMenu.appendChild(btnSetup);
+    body.appendChild(footer);
 }
