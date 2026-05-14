@@ -1,11 +1,11 @@
-export const renderBoard = (player, playerNum) => { 
-    clearBoard();
+export const renderBoard = (player) => { 
+    clearBoard(player);
     const shipsCellsIds = [];
   
     for (let i = 0; i <player.gameboard.board.length; i++) {
         for (let j = 0; j <player.gameboard.board[i].length; j++) {
             if (player.gameboard.board[i][j] !== null) {
-                shipsCellsIds.push(`cell-p${playerNum}-${i}-${j}`);
+                shipsCellsIds.push(`cell-p${player.number}-${i}-${j}`);
             }
         }
     }
@@ -19,7 +19,7 @@ export const renderBoard = (player, playerNum) => {
     for (let hit of player.gameboard.shots.hits) {
         const hitX = hit.slice(0,1);
         const hitY = hit.slice(2,3);
-        const hitCellId = `cell-p${playerNum}-${hitY}-${hitX}`;
+        const hitCellId = `cell-p${player.number}-${hitY}-${hitX}`;
         hits.push(hitCellId);
     }
 
@@ -32,7 +32,7 @@ export const renderBoard = (player, playerNum) => {
     for (let miss of player.gameboard.shots.misses) {
         const missX = miss.slice(0,1);
         const missY = miss.slice(2,3);
-        const missCellId = `cell-p${playerNum}-${missY}-${missX}`;
+        const missCellId = `cell-p${player.number}-${missY}-${missX}`;
         misses.push(missCellId);
     }
 
@@ -42,9 +42,20 @@ export const renderBoard = (player, playerNum) => {
     }
 }
 
-const clearBoard = () => {
-    const allCells = document.querySelectorAll(".cell");
+const clearBoard = (player) => {
+    const allCells = document.querySelectorAll(`#board-player${player.number} .cell`);
     allCells.forEach(cell => {
         cell.classList.remove("ship", "hit");
     });
+}
+
+export const renderName = (player) => {
+    const playerNameLabel = document.querySelector(".player-name");
+    if (player.number === 1) {
+        playerNameLabel.id = "player1";
+    } else if (player.number === 2) {
+        playerNameLabel.id = "player2";
+    }
+    playerNameLabel.textContent = ` ${player.name}`;
+    return;
 }

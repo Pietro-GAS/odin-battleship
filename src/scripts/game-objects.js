@@ -117,9 +117,10 @@ export class Gameboard {
 }
 
 export class Player {
-    constructor (size, isHuman, name) {
+    constructor (size, isHuman, name, number) {
         this.isHuman = isHuman;
         this.gameboard = new Gameboard(size);
         this.name = name;
+        this.number = number;
     }
 }

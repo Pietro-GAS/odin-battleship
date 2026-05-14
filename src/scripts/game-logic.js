@@ -1,10 +1,10 @@
 import { Player } from "./game-objects.js";
 import { loadSetup } from "./setup-page.js";
 import { gameOver } from "./game-over.js";
-import { renderBoard } from "./renderer.js";
+import { renderBoard, renderName } from "./renderer.js";
 
-export const initializeGame = (size, playerNumber) => {
-    const player1 = new Player(size, true, "Player 1");
+export const initializeGame = (size, playerNumber, p1Name, p2Name) => {
+    const player1 = new Player(size, true, p1Name, 1);
     let player2Human;
 
     if (playerNumber === 1) {
@@ -13,7 +13,7 @@ export const initializeGame = (size, playerNumber) => {
         player2Human = true;
     }
 
-    const player2 = new Player(size, player2Human, "Player 2");
+    const player2 = new Player(size, player2Human, p2Name, 2);
 
     // launch setup phase with player1 and player2
     loadSetup(size);
@@ -38,25 +38,25 @@ const setupPhase = (player1, player2) => {
     renderBoard(player2, 2);
 }
 
-
-
-//const clearBoard = () => {
-//    const allCells = document.querySelectorAll(".cell");
-//    allCells.forEach(cell => {
-//        cell.classList.remove("ship", "hit");
-//    });
-//}
-
 const gamePhase = (player1, player2) => {
-    activateCells(player2, 2, player1);
-    if (player2.isHuman) {
-        // 2-player game
-        activateCells(player1, 1, player2);
-    }
+    const players = [player1, player2];
+    const startingPlayerNum = getRandomInt(1, 2);
+    const startingPlayer = players.find((player) => player.number === startingPlayerNum);
+    const secondPlayer = players.find((player) => player.number !== startingPlayerNum);
+
+    console.log(`first player: ${startingPlayer.name}`);
+    console.log(`second player: ${secondPlayer.name}`)
+    
+    //activateCells(player2, player1);
+    //if (player2.isHuman) {
+    //    // 2-player game
+    //    activateCells(player1, player2);
+    //}
+    playTurn(startingPlayer, secondPlayer);
 }
 
-const activateCells = (player, playerNum, otherPlayer) => {
-    const allCells = document.querySelectorAll(`#board-player${playerNum} .cell`);
+const activateCells = (player, otherPlayer) => {
+    const allCells = document.querySelectorAll(`#board-player${player.number} .cell`);
     allCells.forEach((cell) => {
         cell.addEventListener("click", (e) => {
             e.preventDefault();
@@ -72,14 +72,89 @@ const activateCells = (player, playerNum, otherPlayer) => {
                     console.log("miss!");
             }   
             player.gameboard.receiveAttack(coordX, coordY);
-            renderBoard(player, playerNum);
-            checkLoss(player, otherPlayer);
+            renderBoard(player);
+            //checkLoss(player, otherPlayer);
         });
     });
 }
 
-const checkLoss = (player, otherPlayer) => {
-    if(player.gameboard.allShipsSunk()) {
-        gameOver(player, otherPlayer);
+//const checkLoss = (player, otherPlayer) => {
+//    if(player.gameboard.allShipsSunk()) {
+//        gameOver(player, otherPlayer);
+//    }
+//}
+
+const getRandomInt = (min, max) => {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+const playTurn = (player, otherPlayer) => {
+    console.log(`It's ${player.name}'s turn`);
+    renderName(player);
+    //const playerNameLabel = document.querySelector(".player-name");
+    //playerNameLabel.textContent = ` ${player.name}`;
+    //if (player.number === 1) {
+    //    playerNameLabel.id = "player1";
+    //} else if (player.number === 2) {
+    //    playerNameLabel.id = "player2";
+    //}
+    
+    // inactive: current player's board
+    const inactiveCells = document.querySelectorAll(`#board-player${player.number} .cell`);
+    inactiveCells.forEach((cell) => {
+        const newCell = cell.cloneNode(true);
+        cell.replaceWith(newCell);
+    });
+    
+    if(!player.isHuman) {
+        //placeholder
+        const enemyCells = document.querySelectorAll(`#board-player${otherPlayer.number} .cell`);
+        // cells not targeted before
+        const possibleTargets = Array.from(enemyCells).filter((cell) => !Array.from(cell.classList).includes("miss") && !Array.from(cell.classList).includes("hit"));
+        //console.log(possibleTargets);
+        const rand = getRandomInt(0, possibleTargets.length - 1);
+        const selectedTarget = possibleTargets[rand];
+        const coordX = Number(selectedTarget.id.slice(10, 11));
+        const coordY = Number(selectedTarget.id.slice(8, 9));
+        const delay = (ms) => new Promise(res => setTimeout(res, ms));
+        (async () => {
+            await delay(2000);
+            console.log("Waited 2s");
+            otherPlayer.gameboard.receiveAttack(coordX, coordY);
+            renderBoard(otherPlayer);
+            if(otherPlayer.gameboard.allShipsSunk()) {
+                gameOver(otherPlayer, player);
+                return;
+            }
+            playTurn(otherPlayer, player);
+        })();
     }
+
+    // active: other player's board
+    const activeCells = document.querySelectorAll(`#board-player${otherPlayer.number} .cell`);
+    activeCells.forEach((cell) => {
+        cell.addEventListener("click", (e) => {
+            e.preventDefault();
+            const coordX = Number(cell.id.slice(10, 11));
+            const coordY = Number(cell.id.slice(8, 9));
+            if(cell.classList.contains("ship")) {
+                if(cell.classList.contains("hit")) {
+                    console.log("already hit");
+                } else {
+                    console.log("hit!");
+                } 
+            } else {
+                    console.log("miss!");
+            }   
+            otherPlayer.gameboard.receiveAttack(coordX, coordY);
+            renderBoard(otherPlayer);
+            if(otherPlayer.gameboard.allShipsSunk()) {
+                gameOver(otherPlayer, player);
+                return;
+            }
+            playTurn(otherPlayer, player);
+        });
+    });
 }

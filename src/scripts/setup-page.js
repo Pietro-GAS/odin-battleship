@@ -9,6 +9,13 @@ export const loadSetup = (boardSize) => {
     const header = document.createElement("div");
     header.setAttribute("class", "header");
 
+    const content = document.createElement("div");
+    content.setAttribute("id", "content");
+
+    const turnLabel = document.createElement("h1");
+    turnLabel.setAttribute("id", "turn-label");
+    turnLabel.innerHTML = `It's<span class="player-name"></span>'s turn.`;
+
     const boardContainer = document.createElement("div");
     boardContainer.setAttribute("id", "board-container");
 
@@ -71,12 +78,14 @@ export const loadSetup = (boardSize) => {
 
     body.appendChild(header);
     header.appendChild(btnMenu);
-    body.appendChild(boardContainer);
+    body.appendChild(content);
+    content.appendChild(turnLabel);
+    content.appendChild(boardContainer);
     boardContainer.appendChild(p1Container);
     boardContainer.appendChild(p2Container);
-    p1Container.appendChild(p1Label);
     p1Container.appendChild(boardPlayer1);
-    p2Container.appendChild(p2Label);
+    p1Container.appendChild(p1Label);
     p2Container.appendChild(boardPlayer2);
+    p2Container.appendChild(p2Label);
     body.appendChild(footer);
 }

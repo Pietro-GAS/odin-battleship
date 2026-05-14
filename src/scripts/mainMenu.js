@@ -54,6 +54,18 @@ export const loadMainMenu = () => {
         btnTwoP.classList.add("clicked");
         btnOneP.classList.remove("clicked");
     })
+
+    const p1NameInput = document.createElement("input");
+    p1NameInput.setAttribute("type", "text");
+    p1NameInput.setAttribute("id", "p1-name-input");
+    p1NameInput.setAttribute("name", "p1-name-input");
+    p1NameInput.setAttribute("placeHolder", "Player 1");
+
+    const p2NameInput = document.createElement("input");
+    p2NameInput.setAttribute("type", "text");
+    p2NameInput.setAttribute("id", "p2-name-input");
+    p2NameInput.setAttribute("name", "p2-name-input");
+    p2NameInput.setAttribute("placeHolder", "Player 2");
     
     const btnSetup = document.createElement("div");
     btnSetup.setAttribute("class", "button");
@@ -63,7 +75,9 @@ export const loadMainMenu = () => {
         e.preventDefault();
         const boardSize = Number(sizeInput.value);
         const playerNumber = Number(localStorage.getItem("playerNumber"));
-        initializeGame(boardSize, playerNumber); // playerNumber to be determined
+        const p1Name = p1NameInput.value !== '' ? p1NameInput.value : p1NameInput.placeholder;
+        const p2Name = p2NameInput.value !== '' ? p2NameInput.value : p2NameInput.placeholder;
+        initializeGame(boardSize, playerNumber, p1Name, p2Name); // playerNumber to be determined
     });
 
     const footer = document.createElement("div");
@@ -78,6 +92,8 @@ export const loadMainMenu = () => {
     mainMenu.appendChild(container);
     container.appendChild(btnOneP);
     container.appendChild(btnTwoP);
+    mainMenu.appendChild(p1NameInput);
+    mainMenu.appendChild(p2NameInput);
     mainMenu.appendChild(btnSetup);
     body.appendChild(footer);
 }

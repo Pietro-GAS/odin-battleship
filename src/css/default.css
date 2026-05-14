@@ -8,6 +8,8 @@
   --hover: #918E9F;
   --text: #F2F1F3;
   --text-alt: #0C0C0E;
+  --p1: blue;
+  --p2: red;
 }
 
 * {
@@ -77,11 +79,15 @@ body {
   gap: 30px;
 }
 
+input {
+  color: var(--text-alt);
+  background-color: var(--bg-alt);
+  padding: 1px;
+}
+
 #size-input {
   width: 30px;
-  color: var(--text-alt);
   text-align: center;
-  background-color: var(--bg-alt);
 }
 
 #settings-container {
@@ -90,6 +96,34 @@ body {
   flex-direction: row;
   justify-content: space-between;
   gap: 10px;
+}
+
+#content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#turn-label {
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+span {
+  white-space: pre;
+}
+
+.player-name#player1,
+#label-player1 {
+  color: var(--p1);
+}
+
+.player-name#player2,
+#label-player2 {
+  color: var(--p2);
 }
 
 #board-container {
@@ -128,6 +162,10 @@ body {
 
 .cell.ship.hit {
   background-color: red;
+}
+
+.cell.miss {
+  background-color: blue;
 }
 
 .overlay {
