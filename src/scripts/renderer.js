@@ -13,6 +13,7 @@ export const renderBoard = (player) => {
     for (let cellId of shipsCellsIds) {
         const cell = document.getElementById(cellId);
         cell.classList.add("ship");
+        if (player.isHuman) { cell.classList.add("visible") }
     }
 
     const hits = [];
