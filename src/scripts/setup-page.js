@@ -1,8 +1,8 @@
 import { loadMainMenu } from "./mainMenu.js";
+import { Player } from "./game-objects.js";
+import { renderBoard } from "./renderer.js";
 
 export const loadSetup = (boardSize) => {
-    //placeholder
-    //console.log(boardSize);
     const body = document.querySelector("body");
     body.replaceChildren();
 
@@ -88,4 +88,121 @@ export const loadSetup = (boardSize) => {
     p2Container.appendChild(boardPlayer2);
     p2Container.appendChild(p2Label);
     body.appendChild(footer);
+
+
+    //placeholder
+    const btnTest = document.createElement("div");
+    btnTest.setAttribute("class", "button");
+    btnTest.setAttribute("id", "button-test");
+    btnTest.innerHTML = "Test";
+    btnTest.addEventListener("click", () => shipPlacement());
+    header.appendChild(btnTest);
+}
+
+export const shipPlacement = (player) => {
+    const body = document.querySelector("body");
+    const overlay = document.createElement("div");
+    overlay.classList.add("overlay");
+    overlay.classList.add("active");
+    overlay.setAttribute("id", "ship-config-overlay");
+    const shipForm = document.createElement("form");
+    shipForm.setAttribute("id", "ship-form");
+
+    body.appendChild(overlay);
+    overlay.appendChild(shipForm);
+
+    const ships = [
+        {
+            name: "carrier",
+            length: 5
+        },
+        {
+            name: "battleship",
+            length: 4
+        },
+        {
+            name: "cruiser",
+            length: 3
+        },
+        {
+            name: "submarine",
+            length: 3
+        },
+        {
+            name: "destroyer",
+            length: 2
+        }
+    ]
+
+    for (let ship of ships) {
+        const container = document.createElement("div");
+        container.setAttribute("class", "form-section");
+        const label = document.createElement("label");
+        label.textContent = `${ship.name} - length: ${ship.length}`;
+        const inputContainer = document.createElement("div");
+        inputContainer.setAttribute("class", "input-container");
+        inputContainer.setAttribute("class", `${ship.name}-input-container`);
+        const xLabel = document.createElement("label");
+        xLabel.textContent = "x:";
+        const xInput = document.createElement("input");
+        xInput.setAttribute("class", "ship-config-input");
+        xInput.setAttribute("id", `${ship.name}-x-input`);
+        const yLabel = document.createElement("label");
+        yLabel.textContent = "y:";
+        const yInput = document.createElement("input");
+        yInput.setAttribute("class", "ship-config-input");
+        yInput.setAttribute("id", `${ship.name}-y-input`);
+        const orientationLabel = document.createElement("label");
+        orientationLabel.textContent = "orientation:";
+        const orientationInput = document.createElement("input");
+        orientationInput.setAttribute("class", "ship-config-input");
+        orientationInput.setAttribute("id", `${ship.name}-orientation-input`);
+
+        shipForm.appendChild(container);
+        container.appendChild(label);
+        container.appendChild(inputContainer);
+        inputContainer.appendChild(xLabel);
+        inputContainer.appendChild(xInput);
+        inputContainer.appendChild(yLabel);
+        inputContainer.appendChild(yInput);
+        inputContainer.appendChild(orientationLabel);
+        inputContainer.appendChild(orientationInput);
+    }
+    
+    const btnConfirm = document.createElement("div");
+    btnConfirm.setAttribute("class", "button");
+    btnConfirm.setAttribute("id", "button-confirm");
+    btnConfirm.innerHTML = "Confirm";
+    shipForm.appendChild(btnConfirm);
+    btnConfirm.addEventListener("click", (e) => {
+        e.preventDefault();
+        const carrierX = Number(document.getElementById("carrier-x-input").value);
+        console.log(typeof carrierX);
+        const carrierY = Number(document.getElementById("carrier-y-input").value);
+        const carrierOrientation = document.getElementById("carrier-orientation-input").value;
+        const battleshipX = Number(document.getElementById("battleship-x-input").value);
+        const battleshipY = Number(document.getElementById("battleship-y-input").value);
+        const battleshipOrientation = document.getElementById("battleship-orientation-input").value;
+        const cruiserX = Number(document.getElementById("cruiser-x-input").value);
+        const cruiserY = Number(document.getElementById("cruiser-y-input").value);
+        const cruiserOrientation = document.getElementById("cruiser-orientation-input").value;
+        const submarineX = Number(document.getElementById("submarine-x-input").value);
+        const submarineY = Number(document.getElementById("submarine-y-input").value);
+        const submarineOrientation = document.getElementById("submarine-orientation-input").value;
+        const destroyerX = Number(document.getElementById("destroyer-x-input").value);
+        const destroyerY = Number(document.getElementById("destroyer-y-input").value);
+        const destroyerOrientation = document.getElementById("destroyer-orientation-input").value;
+        
+        player.gameboard.placeShip(carrierX, carrierY, 5, carrierOrientation);
+        player.gameboard.placeShip(battleshipX, battleshipY, 4, battleshipOrientation);
+        player.gameboard.placeShip(cruiserX, cruiserY, 3, cruiserOrientation);
+        player.gameboard.placeShip(submarineX, submarineY, 3, submarineOrientation);
+        player.gameboard.placeShip(destroyerX, destroyerY, 2, destroyerOrientation);
+
+        renderBoard(player);
+        shipForm.reset();      
+        body.removeChild(overlay);
+    });
+    
+    
 }

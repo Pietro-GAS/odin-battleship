@@ -1,5 +1,5 @@
 import { Player } from "./game-objects.js";
-import { loadSetup } from "./setup-page.js";
+import { loadSetup, shipPlacement } from "./setup-page.js";
 import { gameOver } from "./game-over.js";
 import { renderBoard, renderName } from "./renderer.js";
 
@@ -25,17 +25,26 @@ export const initializeGame = (size, playerNumber, p1Name, p2Name) => {
 const setupPhase = (player1, player2) => {
     // wait for players to ready their ships
     // if p2 is cpu use logic to select coordinates for their ships
+    const humanPlayers = [player1];
+    if (player2.isHuman) humanPlayers.push(player2);
+
+    for (let player of humanPlayers) shipPlacement(player);
 
     // placeholder: positions are predetermined
 
-    const positions = [[0,0], [1,1], [3,0]];
-    for (let position of positions) {
-        player1.gameboard.placeShip(position[0], position[1], 2, "x");
-        player2.gameboard.placeShip(position[0], position[1], 2, "x");
-    }
+    const positions = [[0,0], [1,1], [6,0], [0, 7], [6, 3]];
+    player2.gameboard.placeShip(positions[0][0], positions[0][1], 5, "x");
+    player2.gameboard.placeShip(positions[1][0], positions[1][1], 4, "y");
+    player2.gameboard.placeShip(positions[2][0], positions[2][1], 3, "x");
+    player2.gameboard.placeShip(positions[3][0], positions[3][1], 3, "x");
+    player2.gameboard.placeShip(positions[4][0], positions[4][1], 2, "y");
+    //for (let position of positions) {
+    //    //player1.gameboard.placeShip(position[0], position[1], 2, "x");
+    //    player2.gameboard.placeShip(position[0], position[1], 2, "x");
+    //}
 
-    renderBoard(player1, 1);
-    renderBoard(player2, 2);
+    //renderBoard(player1);
+    renderBoard(player2);
 }
 
 const gamePhase = (player1, player2) => {
@@ -47,11 +56,6 @@ const gamePhase = (player1, player2) => {
     console.log(`first player: ${startingPlayer.name}`);
     console.log(`second player: ${secondPlayer.name}`)
     
-    //activateCells(player2, player1);
-    //if (player2.isHuman) {
-    //    // 2-player game
-    //    activateCells(player1, player2);
-    //}
     playTurn(startingPlayer, secondPlayer);
 }
 
@@ -78,11 +82,6 @@ const activateCells = (player, otherPlayer) => {
     });
 }
 
-//const checkLoss = (player, otherPlayer) => {
-//    if(player.gameboard.allShipsSunk()) {
-//        gameOver(player, otherPlayer);
-//    }
-//}
 
 const getRandomInt = (min, max) => {
     min = Math.ceil(min);
@@ -93,13 +92,6 @@ const getRandomInt = (min, max) => {
 const playTurn = (player, otherPlayer) => {
     console.log(`It's ${player.name}'s turn`);
     renderName(player);
-    //const playerNameLabel = document.querySelector(".player-name");
-    //playerNameLabel.textContent = ` ${player.name}`;
-    //if (player.number === 1) {
-    //    playerNameLabel.id = "player1";
-    //} else if (player.number === 2) {
-    //    playerNameLabel.id = "player2";
-    //}
     
     // inactive: current player's board
     const inactiveCells = document.querySelectorAll(`#board-player${player.number} .cell`);
@@ -109,7 +101,7 @@ const playTurn = (player, otherPlayer) => {
     });
     
     if(!player.isHuman) {
-        //placeholder
+        // CPU behavior
         const enemyCells = document.querySelectorAll(`#board-player${otherPlayer.number} .cell`);
         // cells not targeted before
         const possibleTargets = Array.from(enemyCells).filter((cell) => !Array.from(cell.classList).includes("miss") && !Array.from(cell.classList).includes("hit"));

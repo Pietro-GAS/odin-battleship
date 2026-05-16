@@ -4,7 +4,8 @@ export const gameOver = (player, otherPlayer) => {
     const body = document.querySelector("body");
     
     const overlay = document.createElement("div");
-    overlay.setAttribute("class", "overlay");
+    overlay.classList.add("overlay");
+    overlay.classList.add("active");
 
     const message = document.createElement("h1");
     message.setAttribute("class", "message");
