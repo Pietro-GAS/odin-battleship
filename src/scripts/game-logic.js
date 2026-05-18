@@ -17,7 +17,6 @@ export const initializeGame = (size, playerNumber, p1Name, p2Name) => {
 
     // launch setup phase with player1 and player2
     loadSetup(size);
-    //clearBoard();
     setupPhase(player1, player2);
     gamePhase(player1, player2);
 }
@@ -47,14 +46,17 @@ const setupPhase = (player1, player2) => {
     renderBoard(player2);
 }
 
-const gamePhase = (player1, player2) => {
+const gamePhase = async (player1, player2) => {
+    const buttonPressed = new Promise(function(resolve) {
+        const buttonConfirm = document.getElementById("button-confirm");
+        buttonConfirm.addEventListener("click", resolve);
+    });
+    await buttonPressed; 
+    
     const players = [player1, player2];
     const startingPlayerNum = getRandomInt(1, 2);
     const startingPlayer = players.find((player) => player.number === startingPlayerNum);
     const secondPlayer = players.find((player) => player.number !== startingPlayerNum);
-
-    console.log(`first player: ${startingPlayer.name}`);
-    console.log(`second player: ${secondPlayer.name}`)
     
     playTurn(startingPlayer, secondPlayer);
 }
@@ -77,7 +79,6 @@ const activateCells = (player, otherPlayer) => {
             }   
             player.gameboard.receiveAttack(coordX, coordY);
             renderBoard(player);
-            //checkLoss(player, otherPlayer);
         });
     });
 }
@@ -90,7 +91,6 @@ const getRandomInt = (min, max) => {
 }
 
 const playTurn = (player, otherPlayer) => {
-    console.log(`It's ${player.name}'s turn`);
     renderName(player);
     
     // inactive: current player's board
@@ -105,7 +105,6 @@ const playTurn = (player, otherPlayer) => {
         const enemyCells = document.querySelectorAll(`#board-player${otherPlayer.number} .cell`);
         // cells not targeted before
         const possibleTargets = Array.from(enemyCells).filter((cell) => !Array.from(cell.classList).includes("miss") && !Array.from(cell.classList).includes("hit"));
-        //console.log(possibleTargets);
         const rand = getRandomInt(0, possibleTargets.length - 1);
         const selectedTarget = possibleTargets[rand];
         const coordX = Number(selectedTarget.id.slice(10, 11));
@@ -113,7 +112,6 @@ const playTurn = (player, otherPlayer) => {
         const delay = (ms) => new Promise(res => setTimeout(res, ms));
         (async () => {
             await delay(2000);
-            console.log("Waited 2s");
             otherPlayer.gameboard.receiveAttack(coordX, coordY);
             renderBoard(otherPlayer);
             if(otherPlayer.gameboard.allShipsSunk()) {

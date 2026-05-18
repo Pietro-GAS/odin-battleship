@@ -177,7 +177,6 @@ export const shipPlacement = (player) => {
     btnConfirm.addEventListener("click", (e) => {
         e.preventDefault();
         const carrierX = Number(document.getElementById("carrier-x-input").value);
-        console.log(typeof carrierX);
         const carrierY = Number(document.getElementById("carrier-y-input").value);
         const carrierOrientation = document.getElementById("carrier-orientation-input").value;
         const battleshipX = Number(document.getElementById("battleship-x-input").value);
